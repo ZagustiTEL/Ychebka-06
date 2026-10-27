@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}{% if item %}Редактирование{% else %}Добавление{% endif %} техники{% endblock %}
+{% block content %}
+<h2 class="mb-4">{% if item %}Редактирование техники{% else %}Добавление техники{% endif %}</h2>
+
+<form method="post" class="card p-4">
+    <div class="row g-3">
+        <div class="col-md-6">
+            <label class="form-label">Название *</label>
+            <input type="text" name="name" class="form-control" required value="{{ item.name if item else '' }}">
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Инвентарный номер *</label>
+            <input type="text" name="inv_number" class="form-control" required
+                   value="{{ item.inv_number if item else '' }}"
+                   {% if item %}readonly{% endif %}>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Категория</label>
+            <input type="text" name="category" class="form-control" list="categories"
+                   value="{{ item.category if item else '' }}" placeholder="Компьютер, Принтер...">
+            <datalist id="categories">
+                <option value="Компьютер">
+                <option value="Монитор">
+                <option value="Ноутбук">
+                <option value="Принтер">
+                <option value="Проектор">
+                <option value="МФУ">
+                <option value="Сетевое оборудование">
+            </datalist>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Кабинет</label>
+            <input type="text" name="cabinet" class="form-control" value="{{ item.cabinet if item else '' }}">
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Материально-ответственное лицо</label>
+            <input type="text" name="responsible" class="form-control" value="{{ item.responsible if item else '' }}">
+        </div>
+        {% if item %}
+        <div class="col-md-4">
+            <label class="form-label">Статус</label>
+            <select name="status" class="form-select">
+                <option value="в эксплуатации" {% if item.status == 'в эксплуатации' %}selected{% endif %}>В эксплуатации</option>
+                <option value="на ремонте" {% if item.status == 'на ремонте' %}selected{% endif %}>На ремонте</option>
+                <option value="списана" {% if item.status == 'списана' %}selected{% endif %}>Списана</option>
+            </select>
+        </div>
+        {% endif %}
+        <div class="col-md-4">
+            <label class="form-label">Дата приобретения</label>
+            <input type="date" name="purchase_date" class="form-control"
+                   value="{{ item.purchase_date.strftime('%Y-%m-%d') if item and item.purchase_date else '' }}">
+        </div>
+        <div class="col-12">
+            <label class="form-label">Примечания</label>
+            <textarea name="notes" class="form-control" rows="2">{{ item.notes if item else '' }}</textarea>
+        </div>
+    </div>
+    <div class="mt-4">
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+        <a href="{{ url_for('equipment_list') }}" class="btn btn-secondary">Отмена</a>
+    </div>
+</form>
+{% endblock %}

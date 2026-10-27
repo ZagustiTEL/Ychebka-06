@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Новая заявка на ремонт{% endblock %}
+{% block content %}
+<h2 class="mb-4">Заявка на ремонт техники</h2>
+
+<form method="post" class="card p-4">
+    <div class="mb-3">
+        <label class="form-label">Техника *</label>
+        <select name="equipment_id" class="form-select" required>
+            <option value="">— выберите —</option>
+            {% for eq in equipment_list %}
+            <option value="{{ eq.id }}">{{ eq.inv_number }} — {{ eq.name }} (каб. {{ eq.cabinet or '?' }})</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Описание неисправности *</label>
+        <textarea name="description" class="form-control" rows="4" required
+                  placeholder="Опишите, что случилось..."></textarea>
+    </div>
+    <button type="submit" class="btn btn-warning">Отправить заявку</button>
+    <a href="{{ url_for('repairs_list') }}" class="btn btn-secondary">Отмена</a>
+</form>
+{% endblock %}

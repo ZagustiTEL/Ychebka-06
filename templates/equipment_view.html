@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}{{ item.name }}{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>{{ item.name }}</h2>
+    <div>
+        {% if user.role == 'admin' %}
+        <a href="{{ url_for('equipment_edit', eq_id=item.id) }}" class="btn btn-outline-secondary">Изменить</a>
+        {% endif %}
+        <a href="{{ url_for('equipment_list') }}" class="btn btn-secondary">Назад</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-3">
+            <div class="card-header">Основные данные</div>
+            <div class="card-body">
+                <table class="table table-sm mb-0">
+                    <tr><th>Инв. номер</th><td>{{ item.inv_number }}</td></tr>
+                    <tr><th>Категория</th><td>{{ item.category or '—' }}</td></tr>
+                    <tr><th>Кабинет</th><td>{{ item.cabinet or '—' }}</td></tr>
+                    <tr><th>МОЛ</th><td>{{ item.responsible or '—' }}</td></tr>
+                    <tr><th>Статус</th>
+                        <td>
+                            {% if item.status == 'в эксплуатации' %}
+                            <span class="badge bg-success">{{ item.status }}</span>
+                            {% elif item.status == 'на ремонте' %}
+                            <span class="badge bg-warning text-dark">{{ item.status }}</span>
+                            {% else %}
+                            <span class="badge bg-secondary">{{ item.status }}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr><th>Дата приобретения</th>
+                        <td>{{ item.purchase_date.strftime('%d.%m.%Y') if item.purchase_date else '—' }}</td>
+                    </tr>
+                    <tr><th>Примечания</th><td>{{ item.notes or '—' }}</td></tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">История заявок на ремонт</div>
+            <div class="card-body">
+                {% if requests %}
+                <ul class="list-group list-group-flush">
+                    {% for r in requests %}
+                    <li class="list-group-item">
+                        <div class="d-flex justify-content-between">
+                            <span>{{ r.created_at.strftime('%d.%m.%Y') }}</span>
+                            <span class="badge bg-secondary">{{ r.status }}</span>
+                        </div>
+                        <small class="text-muted">{{ r.description[:100] }}{% if r.description|length > 100 %}...{% endif %}</small>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p class="text-muted mb-0">Заявок пока нет</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}Заявки на ремонт{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Заявки на ремонт</h2>
+    <a href="{{ url_for('repair_new') }}" class="btn btn-warning">+ Новая заявка</a>
+</div>
+
+{% if items %}
+<div class="table-responsive">
+    <table class="table table-hover table-bordered">
+        <thead class="table-light">
+            <tr>
+                <th>#</th>
+                <th>Дата</th>
+                <th>Техника</th>
+                <th>Описание</th>
+                <th>Кто подал</th>
+                <th>Статус</th>
+                {% if user.role == 'admin' %}<th>Действия</th>{% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in items %}
+            <tr>
+                <td>{{ r.id }}</td>
+                <td>{{ r.created_at.strftime('%d.%m.%Y %H:%M') }}</td>
+                <td>
+                    {% if r.equipment %}
+                    <a href="{{ url_for('equipment_view', eq_id=r.equipment.id) }}">{{ r.equipment.inv_number }}</a><br>
+                    <small>{{ r.equipment.name }}</small>
+                    {% else %}—{% endif %}
+                </td>
+                <td>{{ r.description }}</td>
+                <td>{{ r.user.full_name or r.user.username if r.user else '—' }}</td>
+                <td>
+                    {% if r.status == 'новая' %}
+                    <span class="badge bg-info">новая</span>
+                    {% elif r.status == 'в работе' %}
+                    <span class="badge bg-primary">в работе</span>
+                    {% elif r.status == 'выполнена' %}
+                    <span class="badge bg-success">выполнена</span>
+                    {% else %}
+                    <span class="badge bg-secondary">{{ r.status }}</span>
+                    {% endif %}
+                    {% if r.admin_comment %}<br><small class="text-muted">{{ r.admin_comment }}</small>{% endif %}
+                </td>
+                {% if user.role == 'admin' %}
+                <td>
+                    {% if r.status in ['новая', 'в работе'] %}
+                    <form method="post" action="{{ url_for('repair_update', req_id=r.id) }}" class="d-inline">
+                        <select name="status" class="form-select form-select-sm mb-1" style="width:140px">
+                            <option value="в работе">в работе</option>
+                            <option value="выполнена">выполнена</option>
+                            <option value="отклонена">отклонена</option>
+                        </select>
+                        <input type="text" name="admin_comment" class="form-control form-control-sm mb-1" placeholder="Комментарий">
+                        <button type="submit" class="btn btn-sm btn-primary">OK</button>
+                    </form>
+                    {% else %}
+                    —
+                    {% endif %}
+                </td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="alert alert-info">Заявок пока нет. <a href="{{ url_for('repair_new') }}">Создать первую</a></div>
+{% endif %}
+{% endblock %}

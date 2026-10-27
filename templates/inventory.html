@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Инвентаризация{% endblock %}
+{% block content %}
+<h2 class="mb-3">Инвентаризация</h2>
+<p class="text-muted">Список техники, находящейся на учёте (без списанной). Проводится 1–2 раза в год.</p>
+
+<div class="table-responsive">
+    <table class="table table-sm table-bordered">
+        <thead class="table-light">
+            <tr>
+                <th>№ п/п</th>
+                <th>Инв. №</th>
+                <th>Название</th>
+                <th>Кабинет</th>
+                <th>МОЛ</th>
+                <th>Статус</th>
+                <th>Отметка</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ item.inv_number }}</td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.cabinet or '—' }}</td>
+                <td>{{ item.responsible or '—' }}</td>
+                <td>{{ item.status }}</td>
+                <td style="width:80px"><input type="checkbox" class="form-check-input"></td>
+            </tr>
+            {% else %}
+            <tr><td colspan="7" class="text-center text-muted">Нет техники</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<p class="text-muted small">Отметки в чекбоксах не сохраняются — это просто для удобства при обходе.</p>
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Главная{% endblock %}
+{% block content %}
+<h2 class="mb-4">Панель управления</h2>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card text-center border-primary">
+            <div class="card-body">
+                <h3 class="text-primary">{{ total_eq }}</h3>
+                <p class="mb-0 text-muted">Всего техники</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center border-success">
+            <div class="card-body">
+                <h3 class="text-success">{{ in_use }}</h3>
+                <p class="mb-0 text-muted">В эксплуатации</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center border-warning">
+            <div class="card-body">
+                <h3 class="text-warning">{{ in_repair }}</h3>
+                <p class="mb-0 text-muted">На ремонте</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center border-danger">
+            <div class="card-body">
+                <h3 class="text-danger">{{ open_requests }}</h3>
+                <p class="mb-0 text-muted">Открытых заявок</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">Быстрые действия</div>
+            <div class="card-body">
+                <a href="{{ url_for('equipment_list') }}" class="btn btn-outline-primary mb-2 w-100">Список техники</a>
+                <a href="{{ url_for('repair_new') }}" class="btn btn-outline-warning mb-2 w-100">Подать заявку на ремонт</a>
+                <a href="{{ url_for('inventory') }}" class="btn btn-outline-info mb-2 w-100">Инвентаризация</a>
+                {% if user.role == 'admin' %}
+                <a href="{{ url_for('equipment_add') }}" class="btn btn-outline-success mb-2 w-100">Добавить технику</a>
+                <a href="{{ url_for('writeoff_new') }}" class="btn btn-outline-danger w-100">Списать технику</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">Информация</div>
+            <div class="card-body">
+                <p>Система учёта техники ПОЧУ ИТ ЭУП УПС.</p>
+                <p class="mb-0">Основные возможности:</p>
+                <ul>
+                    <li>Учёт техники (инвентарные номера, кабинеты, МОЛ)</li>
+                    <li>Заявки на ремонт</li>
+                    <li>Инвентаризация</li>
+                    <li>Списание техники</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

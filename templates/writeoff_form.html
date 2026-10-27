@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Списание техники{% endblock %}
+{% block content %}
+<h2 class="mb-4">Списание техники</h2>
+
+<form method="post" class="card p-4">
+    <div class="mb-3">
+        <label class="form-label">Техника *</label>
+        <select name="equipment_id" class="form-select" required>
+            <option value="">— выберите —</option>
+            {% for eq in equipment_list %}
+            <option value="{{ eq.id }}">{{ eq.inv_number }} — {{ eq.name }} ({{ eq.status }})</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Причина списания *</label>
+        <textarea name="reason" class="form-control" rows="3" required></textarea>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Номер акта</label>
+        <input type="text" name="act_number" class="form-control" placeholder="например Акт-15/2024">
+    </div>
+    <button type="submit" class="btn btn-danger">Списать</button>
+    <a href="{{ url_for('writeoffs_list') }}" class="btn btn-secondary">Отмена</a>
+</form>
+{% endblock %}
